@@ -1,0 +1,108 @@
+class Account {
+    protected String customerName;
+    protected String accountNumber;
+    protected String accountType;
+    protected double balance;
+
+    public Account(String customerName, String accountNumber, String accountType) {
+        this.customerName = customerName;
+        this.accountNumber = accountNumber;
+        this.accountType = accountType;
+        this.balance = 0.0;
+    }
+
+    public void deposit(double amount) {
+        balance += amount;
+        System.out.println("Deposited: " + amount);
+        displayBalance();
+    }
+
+    public void displayBalance() {
+        System.out.println("Balance: " + balance);
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+}
+
+class CurAcct extends Account {
+    private double minimumBalance;
+    private double serviceCharge;
+
+    public CurAcct(String customerName, String accountNumber) {
+        super(customerName, accountNumber, "Current");
+        this.minimumBalance = 1000.0; 
+        this.serviceCharge = 50.0;
+    }
+
+    
+    public void deposit(double amount) {
+        super.deposit(amount);
+    }
+
+    public void withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawn: " + amount);
+            checkMinimumBalance();
+        } else {
+            System.out.println("Insufficient balance for withdrawal.");
+        }
+        displayBalance();
+    }
+
+    private void checkMinimumBalance() {
+        if (balance < minimumBalance) {
+            balance -= serviceCharge;
+            System.out.println("Service charge applied: " + serviceCharge);
+            displayBalance();
+        }
+    }
+}
+
+class SavAcct extends Account {
+    private double interestRate;
+
+    public SavAcct(String customerName, String accountNumber) {
+        super(customerName, accountNumber, "Savings");
+        this.interestRate = 0.05;
+    }
+
+    
+    public void deposit(double amount) {
+        super.deposit(amount);
+    }
+
+    public void withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawn: " + amount);
+        } else {
+            System.out.println("Insufficient balance for withdrawal.");
+        }
+        displayBalance();
+    }
+
+    public void computeAndDepositInterest() {
+        double interest = balance * interestRate;
+        deposit(interest);
+        System.out.println("Interest computed and deposited: " + interest);
+    }
+}
+
+public class Bank {
+    public static void main(String[] args) {
+        
+        SavAcct savingsAccount = new SavAcct("Alice", "S12345");
+        savingsAccount.deposit(2000);
+        savingsAccount.computeAndDepositInterest();
+        savingsAccount.withdraw(500);
+        
+       
+        CurAcct currentAccount = new CurAcct("Bob", "C12345");
+        currentAccount.deposit(1500);
+        currentAccount.withdraw(600);
+        currentAccount.withdraw(1000); 
+    }
+}
