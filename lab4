@@ -1,0 +1,87 @@
+package CIE;
+
+public class Personals {
+    public String usn;
+    public String name;
+    public int sem;
+
+    public Personals(String usn, String name, int sem) {
+        this.usn = usn;
+        this.name = name;
+        this.sem = sem;
+    }
+}
+package CIE;
+
+public class Internal {
+    public int[] internalMarks = new int[5];
+
+     public Internal(int[] marks) {
+        for (int i = 0; i < 5; i++) {
+            internalMarks[i] = marks[i];
+        }
+    }
+}
+package SEE;
+
+import CIE.Personals;
+
+public class External extends Personals {
+     public int[] seeMarks = new int[5];
+    public External(String usn, String name, int sem , int[] seeMarks){
+        super(usn, name, sem);
+        for(int i=0; i<5;i++){
+            this.seeMarks[i] = seeMarks[i];
+        }
+    }
+
+}
+import CIE.*;
+import SEE.*;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the number of students: ");
+        int n = sc.nextInt();
+
+        External[] students = new External[n];
+        Internal[] internalMarks = new Internal[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nEnter details for student " + (i + 1) + ":");
+            System.out.print("Enter USN: ");
+            String usn = sc.next();
+            System.out.print("Enter Name: ");
+            String name = sc.next();
+            System.out.print("Enter Semester: ");
+            int sem = sc.nextInt();
+
+            System.out.println("Enter internal marks for 5 courses:");
+            int[] internal = new int[5];
+            for (int j = 0; j < 5; j++) {
+                internal[j] = sc.nextInt();
+            }
+            internalMarks[i] = new Internal(internal);
+
+            System.out.println("Enter SEE marks for 5 courses:");
+            int[] see = new int[5];
+            for (int j = 0; j < 5; j++) {
+                see[j] = sc.nextInt();
+            }
+            students[i] = new External(usn, name, sem, see);
+        }
+
+        System.out.println("\nFinal Marks of Students:");
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nStudent " + (i + 1) + ": " + students[i].name + " (USN: " + students[i].usn + ")");
+            for (int j = 0; j < 5; j++) {
+                int finalMarks = (internalMarks[i].internalMarks[j] / 2) + (students[i].seeMarks[j] / 2);
+                System.out.println("Course " + (j + 1) + ": " + finalMarks);
+            }
+        }
+        sc.close();
+    }
+}
