@@ -1,0 +1,47 @@
+class DeadlockDemo {
+
+    private final Object lock1 = new Object();
+    private final Object lock2 = new Object();
+
+
+    class Thread1 extends Thread {
+        public void run() {
+            synchronized (lock1) {
+                System.out.println("Thread1: Holding lock1...");
+
+                try { Thread.sleep(100); } catch (InterruptedException e) {}
+
+                System.out.println("Thread1: Waiting for lock2...");
+                synchronized (lock2) {
+                    System.out.println("Thread1: Acquired lock2!");
+                }
+            }
+        }
+    }
+
+    class Thread2 extends Thread {
+        public void run() {
+            synchronized (lock2) {
+                System.out.println("Thread2: Holding lock2...");
+
+          
+                try { Thread.sleep(100); } catch (InterruptedException e) {}
+
+                System.out.println("Thread2: Waiting for lock1...");
+                synchronized (lock1) {
+                    System.out.println("Thread2: Acquired lock1!");
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        DeadlockDemo demo = new DeadlockDemo();
+
+        Thread t1 = demo.new Thread1();
+        Thread t2 = demo.new Thread2();
+
+        t1.start();
+        t2.start();
+    }
+}
